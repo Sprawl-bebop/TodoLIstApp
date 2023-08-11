@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, Image, StyleSheet, Pressable, Alert, Modal, TextInput, Button, FlatList } from "react-native";
+import { View, Text, Image, StyleSheet, Pressable, Alert, Modal, TextInput, Button, FlatList, Keyboard } from "react-native";
 import { Float, Int32 } from "react-native/Libraries/Types/CodegenTypes";
 
+var dismissKeyboard = require('dismissKeyboard');
 
 const taskList = [
   {
@@ -54,6 +55,8 @@ const App = () => {
   const [Selected, setSelected] = useState<any>(null)
   const [CompletedTask, setCompletedTask] = useState(0);
 
+  // const [text, setText] = useState('');
+
   const [task, setTask] = useState('');
   const [myTaskList, setTaskList] = useState(taskList);
   const [completedIds,setCompletedIds] = useState<any>([])
@@ -62,7 +65,6 @@ const App = () => {
   // const setArray = (value: number) => {
   //   arr.push(value)
   // };
-
 
 
   return (
@@ -75,19 +77,33 @@ const App = () => {
 
       <View style={[styles.divStyle]}>
         <View style={{ height: 45, justifyContent: "center", flexDirection: "row" }}>
-          <TextInput placeholder="Enter task" style={{ flex: 2, borderColor: "grey", borderWidth: 1, marginRight: 10 }} onChangeText={(task) => {
-            setTask(task)
+          <TextInput placeholder="Enter task" style={{ flex: 2, borderColor: "grey", borderWidth: 1, marginRight: 10 }} 
+           onChangeText={(task)=> {
+              setTask(task)
+              
           }}></TextInput>
-          <Button title="Add Task" onPress={() => {
-            let newItem = {
-              id: taskList.length + 1,
-              taskName: task
-            }
-            setTaskList([
-              newItem,
-              ...myTaskList,
 
-            ])
+          <Button title="Add Task" onPress={() => {
+            if(task!=""){
+              let newItem = {
+                id: taskList.length + 1,
+                taskName: task
+              }
+
+              setTaskList([
+                newItem,
+                ...myTaskList,
+  
+              ])
+
+              Keyboard.dismiss();
+
+            }else{
+              Alert.alert("Empty String")
+              Keyboard.dismiss();
+            }
+
+
           }} />
         </View>
       </View>
